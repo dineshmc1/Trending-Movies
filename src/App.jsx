@@ -41,6 +41,8 @@ const App = () => {
     } catch (error) {
       console.error("Error fetching movies:", error);
       setErrorMessage("Failed to fetch movies. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,6 +65,31 @@ const App = () => {
 
         <section className="all-movies">
           <h2>All Movies</h2>
+
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : errorMessage ? (
+            <p>{errorMessage}</p>
+          ) : movieList.length > 0 ? (
+            <div className="movie-grid">
+              {movieList.map((movie) => (
+                <div key={movie.id} className="movie-card">
+                  {movie.poster_path ? (
+                    <img
+                      src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                      alt={movie.title}
+                    />
+                  ) : (
+                    <div className="no-image">No Image</div>
+                  )}
+                  <h3>{movie.title}</h3>
+                  <p>Rating: {movie.vote_average}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No movies available.</p>
+          )}
         </section>
       </div>
     </main>
